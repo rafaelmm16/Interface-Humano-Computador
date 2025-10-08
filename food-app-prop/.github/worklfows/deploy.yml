@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # ou a branch que você usa como principal
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18' # Verifique a versão do Node.js em seu package.json
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Configure for GitHub Pages
+        run: |
+          # Adiciona o nome do repositório como base path no next.config.js
+          repo_name=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          echo "module.exports = { ...require('./next.config'), basePath: '/$repo_name', output: 'export' };" > next.config.js
+
+      - name: Export
+        run: npm run build # O Next.js com 'output: export' vai gerar a pasta 'out'
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
