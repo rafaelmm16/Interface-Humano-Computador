@@ -1,13 +1,11 @@
 import type { NextConfig } from "next";
 
-const repo = "Interface-Humano-Computador";
-const assetPrefix = `/${repo}/`;
-const basePath = `/${repo}`;
+const repo = "interface-humano-computador";
 
 const nextConfig: NextConfig = {
   output: "export",
-  assetPrefix: assetPrefix,
-  basePath: basePath,
+  basePath: `/${repo}`,
+  assetPrefix: `/${repo}/`,
   images: {
     unoptimized: true,
   },

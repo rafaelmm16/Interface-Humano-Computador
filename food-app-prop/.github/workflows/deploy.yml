@@ -1,26 +1,20 @@
 name: Build and Deploy to GitHub Pages
 
 on:
-  # Executa em pushes para a branch principal
   push:
     branches: ["main"]
-
-  # Permite que você execute este fluxo de trabalho manualmente na guia Ações
   workflow_dispatch:
 
-# Define as permissões do GITHUB_TOKEN para permitir a implantação no GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Permite apenas uma implantação simultânea
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Job de Build
   build:
     runs-on: ubuntu-latest
     steps:
@@ -40,7 +34,6 @@ jobs:
         with:
           path: ./out
 
-  # Job de Deploy
   deploy:
     environment:
       name: github-pages
