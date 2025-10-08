@@ -1,39 +1,42 @@
-name: Deploy to GitHub Pages
+name: Build and Deploy to gh-pages
 
 on:
   push:
     branches:
-      - main # Ou a branch que você usa como principal
+      - "main"
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8 # Especifique a versão do pnpm se necessário
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18' # Use a versão do Node.js que seu projeto requer
-          cache: 'pnpm'
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'food-app-prop/package-lock.json'
 
-      - name: Install dependencies 📦
-        run: pnpm install
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: ./food-app-prop
 
-      - name: Build 🏗️
-        run: pnpm build
+      - name: Build Project
+        run: npm run build
+        working-directory: ./food-app-prop
 
-      - name: Add .nojekyll file
-        run: touch ./out/.nojekyll
+      # Este passo é crucial para garantir que o diretório não está vazio
+      - name: Create .nojekyll file
+        run: touch ./food-app-prop/out/.nojekyll
 
-      - name: Deploy 🚀
+      - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
+          publish_dir: ./food-app-prop/out
+          # A linha abaixo define o utilizador que fará o commit. Isto resolve muitos problemas de permissão.
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
