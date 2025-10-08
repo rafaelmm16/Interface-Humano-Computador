@@ -1,54 +1,67 @@
-name: Build and Deploy to GitHub Pages
+name: Build and Deploy Next.js to GitHub Pages
 
 on:
+  # Executa em pushes para a branch principal
   push:
     branches: ["main"]
+
+  # Permite que você execute este fluxo de trabalho manually
   workflow_dispatch:
 
+# Define as permissões
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Permite apenas uma implantação em simultâneo
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: 'npm'
+          # Aponta para o package-lock.json dentro da subpasta
           cache-dependency-path: food-app-prop/package-lock.json
 
-      - name: Install dependencies
+      - name: Instalar dependências
         run: npm ci
+        # Define o diretório de trabalho para a subpasta do projeto
         working-directory: ./food-app-prop
 
-      - name: Build with Next.js
+      - name: Construir o site com Next.js
         run: npm run build
         working-directory: ./food-app-prop
 
-      - name: Upload artifact
+      - name: (Depuração) Listar ficheiros na pasta de saída
+        run: ls -R
+        working-directory: ./food-app-prop/out
+
+      - name: Carregar artefacto para implementação
         uses: actions/upload-pages-artifact@v3
         with:
-          # Carregar a pasta de saída do projeto Next.js
+          # Caminho para a pasta 'out' gerada pelo build
           path: ./food-app-prop/out
 
+  # Job de Implementação
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    # Precisa que o job 'build' termine com sucesso
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Implementar no GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
