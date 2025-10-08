@@ -1,35 +1,39 @@
-name: Deploy Next.js to GitHub Pages (Classic)
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
-  workflow_dispatch:
+    branches:
+      - main # Ou a branch que você usa como principal
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v4
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
-          node-version: "18"
-          cache: 'npm'
-          cache-dependency-path: food-app-prop/package-lock.json
+          version: 8 # Especifique a versão do pnpm se necessário
 
-      - name: Instalar dependências
-        run: npm ci
-        working-directory: ./food-app-prop
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Use a versão do Node.js que seu projeto requer
+          cache: 'pnpm'
 
-      - name: Construir o site com Next.js
-        run: npm run build
-        working-directory: ./food-app-prop
+      - name: Install dependencies 📦
+        run: pnpm install
 
-      - name: Implementar no branch gh-pages
+      - name: Build 🏗️
+        run: pnpm build
+
+      - name: Add .nojekyll file
+        run: touch ./out/.nojekyll
+
+      - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          # O diretório que o build gerou
-          publish_dir: ./food-app-prop/out
+          publish_dir: ./out
