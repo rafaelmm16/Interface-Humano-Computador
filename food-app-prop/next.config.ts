@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const repo = "interface-humano-computador";
+const repo = "Interface-Humano-Computador";
 const assetPrefix = `/${repo}/`;
 const basePath = `/${repo}`;
 
