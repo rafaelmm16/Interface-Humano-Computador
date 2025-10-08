@@ -1,0 +1,125 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Updated theme for food delivery app with warm, appetizing colors */
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(25 20% 15%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: hsl(33 54% 38%);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: hsl(30 12% 92%);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: hsl(30 12% 92%);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: hsl(30 25% 85%);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: hsl(30 15% 88%);
+  --input: hsl(30 15% 88%);
+  --ring: hsl(33 54% 38%);
+  --chart-1: hsl(33 54% 38%);
+  --chart-2: hsl(28 40% 52%);
+  --chart-3: hsl(35 35% 68%);
+  --chart-4: hsl(42 28% 75%);
+  --chart-5: hsl(25 45% 28%);
+  --radius: 0.625rem;
+  --sidebar: hsl(30 8% 97%);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: hsl(25 15% 8%);
+  --foreground: hsl(30 8% 92%);
+  --card: hsl(25 15% 8%);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: hsl(25 15% 8%);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: hsl(33 54% 58%);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: hsl(25 10% 18%);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: hsl(25 10% 18%);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: hsl(28 15% 25%);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: hsl(0 72.2% 50.6%);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: hsl(25 10% 18%);
+  --input: hsl(25 10% 18%);
+  --ring: hsl(33 54% 58%);
+  --chart-1: hsl(33 54% 58%);
+  --chart-2: hsl(28 40% 52%);
+  --chart-3: hsl(35 35% 68%);
+  --chart-4: hsl(42 28% 75%);
+  --chart-5: hsl(25 45% 38%);
+  --sidebar: hsl(25 12% 12%);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
