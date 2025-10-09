@@ -1,13 +1,20 @@
-name: Build and Deploy to gh-pages
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - "main"
-  workflow_dispatch:
+      - "main" # Executa quando houver push na branch main
+  workflow_dispatch: # Permite execução manual
+
+# Define permissões para o GITHUB_TOKEN para permitir a implantação
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  build-and-deploy:
+  # Job de Build: compila o site
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,20 +32,31 @@ jobs:
         working-directory: ./food-app-prop
 
       - name: Build Project
+        # Usa a configuração do next.config.mjs para definir os caminhos corretos
         run: npm run build
         working-directory: ./food-app-prop
 
-      # Passo de depuração para verificar se a pasta 'out' foi criada
-      - name: Verify build output
-        run: ls -R ./food-app-prop/out
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - name: Create .nojekyll file
-        run: touch ./food-app-prop/out/.nojekyll
-
-      - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./food-app-prop/out
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          # Faz o upload do diretório 'out' gerado pelo build
+          path: ./food-app-prop/out
+
+  # Job de Deploy: publica o site
+  deploy:
+    # Adiciona uma dependência para garantir que o build termine primeiro
+    needs: build
+
+    # Configura o ambiente de implantação para o GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
