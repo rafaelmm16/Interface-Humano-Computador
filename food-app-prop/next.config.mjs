@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const isProd = process.env.NODE_ENV === 'production';
-const repo = "interface-humano-computador";
+const repo = "Interface-Humano-Computador";
 
 const nextConfig = {
   output: "export",
