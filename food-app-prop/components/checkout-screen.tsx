@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image" // <-- ADICIONADO
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -93,11 +94,14 @@ export function CheckoutScreen({ cart, onUpdateQuantity, onBack }: CheckoutScree
                 ) : (
                   cart.map((item) => (
                     <div key={item.id} className="flex gap-4 pb-4 border-b last:border-0">
-                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted shrink-0">
-                        <img
+                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted shrink-0 relative"> {/* <-- ADICIONADO relative */}
+                        {/* SUBSTITUÍDO img por Image */}
+                        <Image
                           src={item.image || "/placeholder.svg"}
                           alt={item.name}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
+                          sizes="80px"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
