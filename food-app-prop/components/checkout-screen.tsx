@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image" // <-- ADICIONADO
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -9,6 +9,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
 import { ArrowLeft, CreditCard, Wallet, Minus, Plus, Trash2, CheckCircle2 } from "lucide-react"
 import type { CartItem } from "@/app/page"
+
+// --- INÍCIO DA CORREÇÃO ---
+const isProd = process.env.NODE_ENV === 'production';
+const repo = "Interface-Humano-Computador";
+const getImagePath = (path: string) => (isProd ? `/${repo}${path}` : path);
+// --- FIM DA CORREÇÃO ---
 
 interface CheckoutScreenProps {
   cart: CartItem[]
@@ -94,10 +100,9 @@ export function CheckoutScreen({ cart, onUpdateQuantity, onBack }: CheckoutScree
                 ) : (
                   cart.map((item) => (
                     <div key={item.id} className="flex gap-4 pb-4 border-b last:border-0">
-                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted shrink-0 relative"> {/* <-- ADICIONADO relative */}
-                        {/* SUBSTITUÍDO img por Image */}
+                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted shrink-0 relative">
                         <Image
-                          src={item.image || "/placeholder.svg"}
+                          src={getImagePath(item.image || "/placeholder.svg")}
                           alt={item.name}
                           fill
                           className="object-cover"

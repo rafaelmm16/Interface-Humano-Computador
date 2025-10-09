@@ -9,6 +9,12 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import type { CartItem } from "@/app/page"
 
+// --- INÍCIO DA CORREÇÃO ---
+const isProd = process.env.NODE_ENV === 'production';
+const repo = "Interface-Humano-Computador";
+const getImagePath = (path: string) => (isProd ? `/${repo}${path}` : path);
+// --- FIM DA CORREÇÃO ---
+
 interface MenuScreenProps {
   onAddToCart: (item: Omit<CartItem, "quantity">) => void
   cartItemCount: number
@@ -269,7 +275,7 @@ export function MenuScreen({ onAddToCart, cartItemCount, onViewCart }: MenuScree
             <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="aspect-video overflow-hidden bg-muted relative">
                 <Image
-                  src={item.image || "/placeholder.svg"}
+                  src={getImagePath(item.image || "/placeholder.svg")}
                   alt={item.name}
                   fill
                   className="object-cover"
