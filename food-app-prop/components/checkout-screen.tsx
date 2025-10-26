@@ -5,34 +5,51 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
+// --- INÍCIO DA CORREÇÃO ---
+import { Input } from "@/components/ui/input" // Importar o Input
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, CreditCard, Wallet, Minus, Plus, Trash2, CheckCircle2 } from "lucide-react"
+import { ArrowLeft, CreditCard, Wallet, Minus, Plus, Trash2, CheckCircle2, Home } from "lucide-react" // Importar o ícone Home
+// --- FIM DA CORREÇÃO ---
 import type { CartItem } from "@/app/page"
 
-// --- INÍCIO DA CORREÇÃO ---
 const isProd = process.env.NODE_ENV === 'production';
 const repo = "Interface-Humano-Computador";
 const getImagePath = (path: string) => (isProd ? `/${repo}${path}` : path);
-// --- FIM DA CORREÇÃO ---
 
 interface CheckoutScreenProps {
   cart: CartItem[]
   onUpdateQuantity: (id: string, quantity: number) => void
   onBack: () => void
+  onConfirmOrder: () => void
 }
 
-export function CheckoutScreen({ cart, onUpdateQuantity, onBack }: CheckoutScreenProps) {
+export function CheckoutScreen({ cart, onUpdateQuantity, onBack, onConfirmOrder }: CheckoutScreenProps) {
   const [paymentMethod, setPaymentMethod] = useState("credit-card")
   const [orderConfirmed, setOrderConfirmed] = useState(false)
+  const [finalTotal, setFinalTotal] = useState(0)
+
+  // --- INÍCIO DA CORREÇÃO ---
+  // Estados para os campos de endereço
+  const [address, setAddress] = useState("")
+  const [neighborhood, setNeighborhood] = useState("")
+  const [complement, setComplement] = useState("")
+  // --- FIM DA CORREÇÃO ---
 
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
   const deliveryFee = 8.0
   const total = subtotal + deliveryFee
 
   const handleConfirmOrder = () => {
+    setFinalTotal(total)
+    onConfirmOrder()
     setOrderConfirmed(true)
   }
+
+  // --- INÍCIO DA CORREÇÃO ---
+  // Variável para verificar se o formulário de endereço é válido
+  const isAddressValid = address.trim() !== "" && neighborhood.trim() !== ""
+  // --- FIM DA CORREÇÃO ---
 
   if (orderConfirmed) {
     return (
@@ -55,7 +72,7 @@ export function CheckoutScreen({ cart, onUpdateQuantity, onBack }: CheckoutScree
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Total pago</span>
-                <span className="font-semibold text-primary">R$ {total.toFixed(2)}</span>
+                <span className="font-semibold text-primary">R$ {finalTotal.toFixed(2)}</span>
               </div>
             </div>
           </CardContent>
@@ -151,6 +168,59 @@ export function CheckoutScreen({ cart, onUpdateQuantity, onBack }: CheckoutScree
               </CardContent>
             </Card>
 
+            {/* --- INÍCIO DA CORREÇÃO --- */}
+            {/* Delivery Address */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl">Endereço de Entrega</CardTitle>
+                <CardDescription>Preencha onde seu pedido será entregue</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="address">Rua e Número</Label>
+                  <div className="relative">
+                    <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" aria-hidden="true" />
+                    <Input
+                      id="address"
+                      type="text"
+                      placeholder="Ex: Av. Principal, 123"
+                      className="pl-10 h-12"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      required
+                      aria-label="Rua e Número do endereço"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="neighborhood">Bairro</Label>
+                  <Input
+                    id="neighborhood"
+                    type="text"
+                    placeholder="Ex: Centro"
+                    className="h-12"
+                    value={neighborhood}
+                    onChange={(e) => setNeighborhood(e.target.value)}
+                    required
+                    aria-label="Bairro"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="complement">Complemento (Opcional)</Label>
+                  <Input
+                    id="complement"
+                    type="text"
+                    placeholder="Ex: Apto 101, Bloco B"
+                    className="h-12"
+                    value={complement}
+                    onChange={(e) => setComplement(e.target.value)}
+                    aria-label="Complemento do endereço"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            {/* --- FIM DA CORREÇÃO --- */}
+
             {/* Payment Method */}
             <Card>
               <CardHeader>
@@ -210,7 +280,10 @@ export function CheckoutScreen({ cart, onUpdateQuantity, onBack }: CheckoutScree
               <CardFooter>
                 <Button
                   onClick={handleConfirmOrder}
-                  disabled={cart.length === 0}
+                  // --- INÍCIO DA CORREÇÃO ---
+                  // Desabilita se o carrinho estiver vazio OU o endereço for inválido
+                  disabled={cart.length === 0 || !isAddressValid}
+                  // --- FIM DA CORREÇÃO ---
                   className="w-full h-12 text-base font-semibold"
                   size="lg"
                 >

@@ -37,6 +37,10 @@ export default function FoodDeliveryApp() {
     }
   }
 
+  const clearCart = () => {
+    setCart([])
+  }
+
   const getTotalItems = () => {
     return cart.reduce((total, item) => total + item.quantity, 0)
   }
@@ -52,7 +56,12 @@ export default function FoodDeliveryApp() {
         />
       )}
       {currentScreen === "checkout" && (
-        <CheckoutScreen cart={cart} onUpdateQuantity={updateQuantity} onBack={() => setCurrentScreen("menu")} />
+        <CheckoutScreen
+          cart={cart}
+          onUpdateQuantity={updateQuantity}
+          onBack={() => setCurrentScreen("menu")}
+          onConfirmOrder={clearCart}
+        />
       )}
     </div>
   )

@@ -4,16 +4,26 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Plus, Search, UtensilsCrossed } from "lucide-react"
+// --- INÍCIO DA CORREÇÃO ---
+import {
+  ShoppingCart,
+  Plus,
+  Search,
+  UtensilsCrossed,
+  Cookie,
+  CupSoda,
+  Pizza,
+  Salad,
+  Soup,
+} from "lucide-react"
+// --- FIM DA CORREÇÃO ---
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import type { CartItem } from "@/app/page"
 
-// --- INÍCIO DA CORREÇÃO ---
 const isProd = process.env.NODE_ENV === 'production';
 const repo = "Interface-Humano-Computador";
 const getImagePath = (path: string) => (isProd ? `/${repo}${path}` : path);
-// --- FIM DA CORREÇÃO ---
 
 interface MenuScreenProps {
   onAddToCart: (item: Omit<CartItem, "quantity">) => void
@@ -21,7 +31,16 @@ interface MenuScreenProps {
   onViewCart: () => void
 }
 
-const categories = ["Todos", "Massas", "Pizzas", "Bebidas", "Sobremesas"]
+// --- INÍCIO DA CORREÇÃO ---
+// Modificado para um array de objetos para incluir ícones
+const categories = [
+  { name: "Todos", icon: Salad },
+  { name: "Massas", icon: Soup },
+  { name: "Pizzas", icon: Pizza },
+  { name: "Bebidas", icon: CupSoda },
+  { name: "Sobremesas", icon: Cookie },
+]
+// --- FIM DA CORREÇÃO ---
 
 const menuItems = [
   {
@@ -254,19 +273,26 @@ export function MenuScreen({ onAddToCart, cartItemCount, onViewCart }: MenuScree
         {/* Categories */}
         <div className="mb-8">
           <h2 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">Categorias</h2>
+          {/* --- INÍCIO DA CORREÇÃO --- */}
+          {/* Mapeia o novo array de objetos para renderizar botões com ícones */}
           <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className="h-10 px-6"
-                aria-pressed={selectedCategory === category}
-              >
-                {category}
-              </Button>
-            ))}
+            {categories.map((category) => {
+              const Icon = category.icon
+              return (
+                <Button
+                  key={category.name}
+                  variant={selectedCategory === category.name ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(category.name)}
+                  className="h-10 px-5"
+                  aria-pressed={selectedCategory === category.name}
+                >
+                  <Icon className="w-4 h-4 mr-2" aria-hidden="true" />
+                  {category.name}
+                </Button>
+              )
+            })}
           </div>
+          {/* --- FIM DA CORREÇÃO --- */}
         </div>
 
         {/* Menu Items */}
